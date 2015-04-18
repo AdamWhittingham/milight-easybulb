@@ -1,11 +1,9 @@
 module Milight
   class Brightness
 
-    BRIGHTNESS_CMD = 0x4E
-
     def self.percent percent
       raise invalid_percent_error unless valid_percent?(percent)
-      59 * percent / 100
+      0x1F * percent / 100
     end
 
     private
