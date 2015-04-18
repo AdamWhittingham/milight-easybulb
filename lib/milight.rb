@@ -1,4 +1,4 @@
-require_relative 'milight/rgbw'
+require 'milight/controller'
 
 module Milight
 end
