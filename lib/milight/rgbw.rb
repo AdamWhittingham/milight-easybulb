@@ -2,8 +2,8 @@ require 'socket'
 
 module Milight
   class RGBW
-    OFF  = 0x41
-    ON   = 0x42
+    ALL_OFF  = 0x41
+    ALL_ON   = 0x42
 
     GROUP_ON = [0x45, 0x47, 0x49, 0x4B]
     GROUP_OFF = [0x46, 0x48, 0x4A, 0x4C]
@@ -20,65 +20,78 @@ module Milight
     COLOUR_CMD = 0x40
 
     def initialize(ip_address, port=8899)
-      @socket = UDPSocket.new
       @ip_address = ip_address
       @port = port
     end
 
     def on
-      send_command ON
+      send_command ALL_ON
+      self
     end
 
     def off
-      send_command OFF
+      send_command ALL_OFF
+      self
     end
 
     def group_on group
       raise invalid_group_error unless valid_group?(group)
       send_command GROUP_ON[group - 1]
+      self
     end
 
     def group_off group
       raise invalid_group_error unless valid_group?(group)
       send_command GROUP_OFF[group - 1]
+      self
     end
 
-    def select_group group
+    def group group
       group_on group
-      sleep 0.1
+      command_delay
+      self
     end
 
     def select_all
       send_command GROUP_ALL
-      sleep 0.1
+      command_delay
+      self
     end
 
     def brightness percent
       raise invalid_percent_error unless valid_percent?(percent)
       level = 59 * percent / 100
       send_command BRIGHTNESS_CMD, level
+      self
     end
 
     def colour colour
       raise invalid_colour_error unless valid_colour?(colour)
       send_command COLOUR_CMD, colour
+      self
     end
 
     def all_white
       select_all
       send_command WHITE_ALL
+      self
     end
 
     def group_white group
       raise invalid_group_error unless valid_group?(group)
-      select_group group
       send_command GROUP_WHITE[group - 1]
+      self
     end
 
     private
 
     def send_command cmd, arg1=0x00
-      @socket.send [cmd, arg1, 0x55].pack('C*'), 0, @ip_address, @port
+      socket = UDPSocket.new
+      socket.send [cmd, arg1, 0x55].pack('C*'), 0, @ip_address, @port
+    end
+
+    def command_delay
+      sleep 0.1
     end
 
     def invalid_group_error
