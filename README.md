@@ -14,17 +14,17 @@ For example, connecting to a controller on `192.168.0.10`, turning on group 1 an
 require 'milight'
 
 # Initialise a controller
-controller = Milight::Controller.new '192.168.0.10'
+lights = Milight::Controller.new '192.168.0.10'
 
 # Turn a group of lights on and set their colour
-controller.group(1).on
-controller.group(1).colour :teal
+lights.group(1).on
+lights.group(1).colour :teal
 
 # Chain commands to one group
-controller.group(2).on.white.brightness(30)
+lights.group(2).on.white.brightness(30)
 
 # Go to bed after happily messing with lights!
-controller.all.off
+lights.all.off
 ```
 
 Take a look at [the example script](bin/example) for an example script using the gem.

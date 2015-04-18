@@ -10,51 +10,50 @@ if ARGV.length != 1
 end
 
 ip = ARGV.shift
-controller = Milight::Controller.new ip
-
+lights = Milight::Controller.new ip
 
 # Control all lights on all channels
-controller.all.on
+lights.all.on
 sleep 1
-controller.all.colour(:red)
+lights.all.colour(:red)
 sleep 1
-controller.all.colour(:green)
+lights.all.colour(:green)
 sleep 1
-controller.all.colour(:blue)
+lights.all.colour(:blue)
 sleep 1
-controller.all.off
+lights.all.off
 sleep 1
 
 # Control each channel/group of lights
-controller.group(1).colour(:red)
-controller.group(2).colour(:green)
-controller.group(3).colour(:yellow)
-controller.group(4).colour(:blue)
+lights.group(1).colour(:red)
+lights.group(2).colour(:green)
+lights.group(3).colour(:yellow)
+lights.group(4).colour(:blue)
 sleep 1
 
-controller.group(1).colour(:blue)
-controller.group(2).colour(:red)
-controller.group(3).colour(:green)
-controller.group(4).colour(:yellow)
+lights.group(1).colour(:blue)
+lights.group(2).colour(:red)
+lights.group(3).colour(:green)
+lights.group(4).colour(:yellow)
 sleep 1
 
-controller.group(1).colour(:yellow)
-controller.group(2).colour(:blue)
-controller.group(3).colour(:red)
-controller.group(4).colour(:green)
+lights.group(1).colour(:yellow)
+lights.group(2).colour(:blue)
+lights.group(3).colour(:red)
+lights.group(4).colour(:green)
 sleep 1
 
 # Use the colour helper outside to play with ranges and values manually
 blue = Milight::Colour.of(:blue)
 red = Milight::Colour.of(:red)
 (blue..red).map do |c|
-  controller.group(1).colour(c)
-  controller.group(2).colour((c +  60) % 255)
-  controller.group(3).colour((c + 100) % 255)
-  controller.group(4).colour((c + 140) % 255)
+  lights.group(1).colour(c)
+  lights.group(2).colour((c +  60) % 255)
+  lights.group(3).colour((c + 100) % 255)
+  lights.group(4).colour((c + 140) % 255)
   sleep 0.1
 end
 
 # ...and set everything back to white when we're done!
 sleep 1
-controller.all.white
+lights.all.white
