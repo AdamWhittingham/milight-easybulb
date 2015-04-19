@@ -11,10 +11,12 @@ module Milight
     BRIGHTNESS = 0x4E
     COLOUR = 0x40
 
-    def initialize commander, group
+    def initialize commander, group, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new
       raise invalid_group_error unless valid_group? group
       @index = group - 1
       @commander = commander
+      @colour = colour_helper
+      @brightness = brightness_helper
     end
 
     def on
@@ -33,7 +35,7 @@ module Milight
     end
 
     def colour colour
-      colour_value = Milight::Colour.of(colour)
+      colour_value = @colour.of(colour)
       on
       @commander.command_delay
       @commander.send_command COLOUR, colour_value
@@ -41,7 +43,7 @@ module Milight
     end
 
     def brightness value
-      brightness_value = Milight::Brightness.percent(value)
+      brightness_value = @brightness.percent(value)
       on
       @commander.command_delay
       @commander.send_command BRIGHTNESS, brightness_value

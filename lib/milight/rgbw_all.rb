@@ -10,8 +10,10 @@ module Milight
     COLOUR = 0x40
     BRIGHTNESS = 0x4E
 
-    def initialize commander
+    def initialize commander, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new
       @commander = commander
+      @colour = colour_helper
+      @brightness = brightness_helper
     end
 
     def on
@@ -30,13 +32,13 @@ module Milight
     end
 
     def colour colour
-      colour_value = Milight::Colour.of(colour)
+      colour_value = @colour.of(colour)
       @commander.send_command COLOUR, colour_value
       self
     end
 
     def brightness value
-      brightness_value = Milight::Brightness.percent(value)
+      brightness_value = @brightness.percent(value)
       @commander.send_command BRIGHTNESS, brightness_value
       self
     end

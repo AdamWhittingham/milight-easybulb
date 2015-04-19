@@ -53,12 +53,28 @@ describe Milight::RgbwGroup do
 
   describe '#brightness' do
     it 'sends the BRIGHTNESS packet for the given group' do
-      expect(commander).to receive(:send_command).with(0x4E, 5)
+      expect(commander).to receive(:send_command).with(0x4E, 3)
       subject.brightness 10
     end
 
     it 'is chainable' do
       expect(subject.brightness(10)).to eq subject
+    end
+  end
+
+  describe '.new' do
+    it 'can have the colour helper overridden' do
+      helper = double(Milight::Colour)
+      group = described_class.new commander, 1, colour_helper: helper
+      expect(helper).to receive(:of).with(10).and_return(10)
+      group.colour 10
+    end
+
+    it 'can have the brightness helper overridden' do
+      helper = double(Milight::Brightness)
+      group = described_class.new commander, 1, brightness_helper: helper
+      expect(helper).to receive(:percent).with(10).and_return(10)
+      group.brightness 10
     end
   end
 

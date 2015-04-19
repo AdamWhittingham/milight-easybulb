@@ -53,7 +53,7 @@ describe Milight::RgbwAll do
 
   describe '#brightness' do
     it 'sends the BRIGHTNESS packet' do
-      expect(commander).to receive(:send_command).with(0x4E, 5)
+      expect(commander).to receive(:send_command).with(0x4E, 3)
       subject.brightness 10
     end
 

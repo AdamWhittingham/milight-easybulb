@@ -16,12 +16,12 @@ module Milight
       violet:     250,
     }
 
-    def self.of value
+    def of value
       case value
       when Symbol, String
-        return new.colour_named(value)
+        return colour_named(value)
       when Fixnum
-        return new.colour_numbered(value)
+        return colour_numbered(value)
       else
         raise invalid_colour_error
       end
@@ -40,7 +40,7 @@ module Milight
 
     private
 
-    def self.invalid_colour_error
+    def invalid_colour_error
       ArgumentError.new('Colours must be a symbol or a number between 0 and 255')
     end
 
