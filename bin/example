@@ -44,8 +44,9 @@ lights.group(4).colour(:green)
 sleep 1
 
 # Use the colour helper outside to play with ranges and values manually
-blue = Milight::Colour.of(:blue)
-red = Milight::Colour.of(:red)
+colour = Milight::Colour.new
+blue = colour.of(:blue)
+red = colour.of(:red)
 (blue..red).map do |c|
   lights.group(1).colour(c)
   lights.group(2).colour((c +  60) % 255)
