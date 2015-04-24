@@ -16,6 +16,8 @@ module Milight
       violet:     250,
     }
 
+    MILIGHT_HUE_OFFSET = 170
+
     def of value
       case value
       when Symbol, String
@@ -45,7 +47,7 @@ module Milight
 
     def hsl h,s,l
       mod = (h / 120) *  50
-      (h + 170 + mod) % 255
+      (h + MILIGHT_HUE_OFFSET + mod) % 255
     end
 
     def rgb_to_hsl(r, g, b)
