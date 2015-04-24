@@ -121,7 +121,7 @@ module Milight
     end
 
     def invalid_colour_error
-      ArgumentError.new('Colours must be a symbol or a number between 0 and 255')
+      ArgumentError.new('Colours must be a name symbol, HEX string, or a MiLight colour integer between 0 and 255')
     end
 
     def invalid_colour_name_error name
