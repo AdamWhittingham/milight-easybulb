@@ -19,16 +19,29 @@ describe Milight::Colour do
       expect(subject.of :dark_blue).to eq blue_code
     end
 
-    it 'takes a string for named colours' do
-      expect(subject.of 'Dark Blue').to eq blue_code
-    end
-
     it 'raises an exception for invalid names' do
       expect{subject.of :grellow}.to raise_error ArgumentError
     end
 
     it 'balks at arguments which are not a valid number or name' do
       expect{subject.of 0.2}.to raise_error ArgumentError
+    end
+
+    it 'takes valid 6-digit HEX codes' do
+      expect(subject.of '#FF0000').to eq red_code
+    end
+
+    it 'takes valid HEX codes without a leading hash' do
+      expect(subject.of '0F0').to eq green_code
+      expect(subject.of '00ff00').to eq green_code
+    end
+
+    it 'takes valid 3-digit HEX codes' do
+      expect(subject.of '#0F0').to eq green_code
+    end
+
+    it 'raises an exception for invalid HEX codes' do
+      expect{subject.of '#00112233'}.to raise_error ArgumentError
     end
   end
 
