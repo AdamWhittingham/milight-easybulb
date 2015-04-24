@@ -32,5 +32,8 @@ Take a look at [the example script](bin/example) for an example script using the
 Things you should know
 ----------------------
 * Brightness is given as a percentage (0-100)
-* Colour can be given as a named colour (see [the colour helper](lib/milight/colour.rb)) or as a number between 0-255. Sadly, the Milights do not seem to use conventional 8-bit colour; I'm looking to add better helper methods in the future.
+* Colours can be given as:
+  * a [named colour](lib/milight/colour/named.rb))
+  * a HEX colour code (for example, `#f00` or `#a0f060`
+  * a MiLight hue colour command- an integer between 0-255.
 * Everything is sent over UDP, as per the Milight spec. This means that some commands will get 'lost', especially if you send many in quick succession.

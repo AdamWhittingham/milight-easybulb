@@ -1,20 +1,6 @@
+require_relative 'colour/named'
 module Milight
   class Colour
-
-    NAMED_COLOURS = {
-      red:        170,
-      magenta:    180,
-      orange:     155,
-      yellow:     140,
-      green:       85,
-      lime:       120,
-      teal:        70,
-      blue:        50,
-      dark_blue:    0,
-      purple:     210,
-      lilac:      235,
-      violet:     250,
-    }
 
     MILIGHT_HUE_OFFSET = 170
 
@@ -33,7 +19,7 @@ module Milight
 
     def colour_named name
       raise invalid_colour_name_error(name) unless valid_name? name
-      NAMED_COLOURS[name]
+      NAMED[name]
     end
 
     def colour_numbered number
@@ -113,7 +99,7 @@ module Milight
     end
 
     def valid_name? name
-      NAMED_COLOURS.keys.include?(name)
+      NAMED.keys.include?(name)
     end
 
     def valid_hex_colour? value
