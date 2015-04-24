@@ -2,6 +2,8 @@ module Milight
   class Colour
     class HSL
 
+      MILIGHT_HUE_OFFSET = 170
+
       def from_rgb r,g,b
         @h,@s,@l = rgb_to_hsl(r,g,b)
         self
@@ -13,7 +15,7 @@ module Milight
       end
 
       def to_milight
-        mod = (@h / 120) *  50
+        mod = (@h / 120) * 50
         (@h + MILIGHT_HUE_OFFSET + mod) % 255
       end
 
@@ -37,10 +39,6 @@ module Milight
         [h,s,l]
       end
 
-      def delta r,g,b
-        [r,g,b].minmax.reverse.inject(:-)
-      end
-
       def hue r, g, b
         return 0 if greyscale?(r,g,b)
         delta = delta(r,g,b)
@@ -62,6 +60,10 @@ module Milight
 
       def luminosity r,g,b
         [r,g,b].minmax.inject(:+) / 2
+      end
+
+      def delta r,g,b
+        [r,g,b].minmax.reverse.inject(:-)
       end
 
     end

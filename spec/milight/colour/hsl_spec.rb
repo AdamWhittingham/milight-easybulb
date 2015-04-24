@@ -11,14 +11,6 @@ describe Milight::Colour::HSL do
       expect(subject.greyscale?(10, 10, 10)).to eq true
     end
 
-    it 'is true for white' do
-      expect(subject.greyscale?(255, 255, 255)).to eq true
-    end
-
-    it 'is true for black' do
-      expect(subject.greyscale?(0, 0, 0)).to eq true
-    end
-
     it 'is false for colours' do
       expect(subject.greyscale?(0, 100, 0)).to eq false
     end
@@ -33,7 +25,7 @@ describe Milight::Colour::HSL do
     end
   end
 
-  describe '#to_milight' do
+  describe '#from_hsl and #to_milight' do
     it 'returns the milight colour code for the given HSL values' do
       expect(subject.from_hsl(  0, 1.0, 0.5).to_milight).to eq red_code
       expect(subject.from_hsl(120, 1.0, 0.5).to_milight).to eq green_code
