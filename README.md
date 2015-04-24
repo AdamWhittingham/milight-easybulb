@@ -32,7 +32,7 @@ Take a look at [the example script](bin/example) for an example script using the
 Things you should know
 ----------------------
 * Brightness is given as a percentage (0-100)
-* Colours can be given as:
+* Colours can be set using the `of` method:
   * a [named colour](lib/milight/colour/named.rb))
   * a HEX colour code (for example, `#f00` or `#a0f060`
   * a MiLight hue colour command- an integer between 0-255.
