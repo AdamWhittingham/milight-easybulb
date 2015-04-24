@@ -32,9 +32,8 @@ module Milight
     end
 
     def colour_named name
-      name_sym = name.to_s.downcase.gsub(/ +/,'_').to_sym
-      raise invalid_colour_name_error(name) unless valid_name? name_sym
-      NAMED_COLOURS[name_sym]
+      raise invalid_colour_name_error(name) unless valid_name? name
+      NAMED_COLOURS[name]
     end
 
     def colour_numbered number
@@ -136,7 +135,6 @@ module Milight
     def invalid_hex_colour_error
       ArgumentError.new('Hex colours codes must be 3 or 6 0-9 or a-f characters')
     end
-
 
   end
 end
