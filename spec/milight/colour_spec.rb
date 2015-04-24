@@ -53,38 +53,5 @@ describe Milight::Colour do
     end
   end
 
-  describe '#hsl' do
-    it 'returns the milight colour code for the given HSL values' do
-      expect(subject.hsl   0, 1.0, 0.5).to eq red_code
-      expect(subject.hsl 120, 1.0, 0.5).to eq green_code
-      expect(subject.hsl 240, 1.0, 0.5).to eq blue_code
-    end
-  end
 
-  describe '#rgb_to_hsl' do
-    it 'converts the RGB colour to HSL' do
-      expect(subject.rgb_to_hsl(255,   0,   0)).to eq [0,1.0,0.5]
-      expect(subject.rgb_to_hsl(  0, 255,   0)).to eq [120,1.0,0.5]
-      expect(subject.rgb_to_hsl(  0,   0, 255)).to eq [240,1.0,0.5]
-      expect(subject.rgb_to_hsl(255,   0, 255)).to eq [300,1.0,0.5]
-    end
-  end
-
-  describe '#greyscale?' do
-    it 'is true for greys' do
-      expect(subject.greyscale?(10, 10, 10)).to eq true
-    end
-
-    it 'is true for white' do
-      expect(subject.greyscale?(255, 255, 255)).to eq true
-    end
-
-    it 'is true for black' do
-      expect(subject.greyscale?(0, 0, 0)).to eq true
-    end
-
-    it 'is false for colours' do
-      expect(subject.greyscale?(0, 100, 0)).to eq false
-    end
-  end
 end
