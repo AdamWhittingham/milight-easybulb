@@ -12,7 +12,7 @@ describe Milight::Colour do
     end
 
     it 'raises an exception for invalid numbers' do
-      expect{subject.of 256}.to raise_error ArgumentError
+      expect { subject.of 256 }.to raise_error ArgumentError
     end
 
     it 'takes a symbol for named colours' do
@@ -20,11 +20,11 @@ describe Milight::Colour do
     end
 
     it 'raises an exception for invalid names' do
-      expect{subject.of :grellow}.to raise_error ArgumentError
+      expect { subject.of :grellow }.to raise_error ArgumentError
     end
 
     it 'balks at arguments which are not a valid number or name' do
-      expect{subject.of 0.2}.to raise_error ArgumentError
+      expect { subject.of 0.2 }.to raise_error ArgumentError
     end
 
     it 'takes valid 6-digit HEX codes' do
@@ -41,7 +41,7 @@ describe Milight::Colour do
     end
 
     it 'raises an exception for invalid HEX codes' do
-      expect{subject.of '#00112233'}.to raise_error ArgumentError
+      expect { subject.of '#00112233' }.to raise_error ArgumentError
     end
   end
 
@@ -52,6 +52,4 @@ describe Milight::Colour do
       expect(subject.rgb 0,     0, 255).to eq blue_code
     end
   end
-
-
 end

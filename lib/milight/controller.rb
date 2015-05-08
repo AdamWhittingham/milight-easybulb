@@ -5,7 +5,7 @@ require 'milight/rgbw_all'
 module Milight
   class Controller
 
-    def initialize(ip_address, port=8899)
+    def initialize(ip_address, port = 8899)
       @commander = Milight::Commander.new ip_address, port
     end
 
@@ -13,7 +13,7 @@ module Milight
       Milight::RgbwAll.new(@commander)
     end
 
-    def group channel
+    def group(channel)
       Milight::RgbwGroup.new(@commander, channel)
     end
 

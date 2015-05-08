@@ -11,7 +11,7 @@ module Milight
     BRIGHTNESS = 0x4E
     COLOUR = 0x40
 
-    def initialize commander, group, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new
+    def initialize(commander, group, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new)
       raise invalid_group_error unless valid_group? group
       @index = group - 1
       @commander = commander
@@ -34,7 +34,7 @@ module Milight
       self
     end
 
-    def colour colour
+    def colour(colour)
       colour_value = @colour.of(colour)
       on
       @commander.command_delay
@@ -42,7 +42,7 @@ module Milight
       self
     end
 
-    def brightness value
+    def brightness(value)
       brightness_value = @brightness.percent(value)
       on
       @commander.command_delay
@@ -56,8 +56,8 @@ module Milight
       ArgumentError.new('Group must be between 1 and 4')
     end
 
-    def valid_group? value
-      value.between?(1,4)
+    def valid_group?(value)
+      value.between?(1, 4)
     end
 
   end

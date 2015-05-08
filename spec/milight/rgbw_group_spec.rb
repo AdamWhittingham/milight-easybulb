@@ -77,5 +77,4 @@ describe Milight::RgbwGroup do
       group.brightness 10
     end
   end
-
 end

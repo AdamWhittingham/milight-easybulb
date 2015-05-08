@@ -61,5 +61,4 @@ describe Milight::RgbwAll do
       expect(subject.brightness(10)).to eq subject
     end
   end
-
 end

@@ -1,7 +1,7 @@
 module Milight
   class Brightness
 
-    def percent percent
+    def percent(percent)
       raise invalid_percent_error unless valid_percent?(percent)
       0x1F * percent / 100
     end
@@ -12,8 +12,8 @@ module Milight
       ArgumentError.new('Percentages are generally between 0 and 100')
     end
 
-    def valid_percent? value
-      value.between?(0,100)
+    def valid_percent?(value)
+      value.between?(0, 100)
     end
 
   end
