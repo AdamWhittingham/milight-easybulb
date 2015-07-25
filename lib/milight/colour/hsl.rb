@@ -19,7 +19,7 @@ module Milight
 
       def to_milight
         mod = (@h / 120) * 50
-        (@h + MILIGHT_HUE_OFFSET + mod) % 255
+        (@h + MILIGHT_HUE_OFFSET + mod).round % 255
       end
 
       def to_hsl

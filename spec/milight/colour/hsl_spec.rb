@@ -16,6 +16,12 @@ describe Milight::Colour::HSL do
     end
   end
 
+  describe '#to_milight' do
+    it 'rounds the colour value to send an integer' do
+      expect(subject.from_rgb(255, 0, 115).to_milight).to eq 132
+    end
+  end
+
   describe '#from_rgb and #to_hsl' do
     it 'converts the RGB colour to HSL' do
       expect(subject.from_rgb(255,   0,   0).to_hsl).to eq [0, 1.0, 0.5]
