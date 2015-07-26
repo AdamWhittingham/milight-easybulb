@@ -34,23 +34,35 @@ module Milight
       self
     end
 
-    def colour(colour)
-      colour_value = @colour.of(colour)
-      on
-      @commander.command_delay
+    def hue(hue)
+      colour_value = @colour.milight_code_for(hue)
+      select
       @commander.send_command COLOUR, colour_value
       self
     end
 
     def brightness(value)
       brightness_value = @brightness.percent(value)
-      on
-      @commander.command_delay
+      select
+      @commander.send_command BRIGHTNESS, brightness_value
+      self
+    end
+
+    def colour(color)
+      colour_value = @colour.milight_code_for(color)
+      brightness_value = @brightness.for_colour(color)
+      select
+      @commander.send_command COLOUR, colour_value
       @commander.send_command BRIGHTNESS, brightness_value
       self
     end
 
     private
+
+    def select
+      on
+      @commander.command_delay
+    end
 
     def invalid_group_error
       ArgumentError.new('Group must be between 1 and 4')

@@ -17,6 +17,12 @@ module Milight
         self
       end
 
+      def from_hex(hex)
+        r,g,b = hex_to_rgb(hex)
+        from_rgb(r,g,b)
+        self
+      end
+
       def to_milight
         mod = (@h / 120) * 50
         (@h + MILIGHT_HUE_OFFSET + mod).round % 255
@@ -28,6 +34,14 @@ module Milight
 
       def greyscale?(r, g, b)
         (r == g && g == b)
+      end
+
+      def hex_to_rgb(hex)
+        hex.sub('#', '')
+          .chars
+          .each_slice(hex.length / 3)
+          .map(&:join)
+          .map { |h| h.to_i(16) }
       end
 
       private

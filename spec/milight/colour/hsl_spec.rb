@@ -22,6 +22,21 @@ describe Milight::Colour::HSL do
     end
   end
 
+  describe '#from_hex' do
+    it 'takes valid 6-digit HEX codes' do
+      expect(subject.from_hex('#FF0000').to_milight).to eq red_code
+    end
+
+    it 'takes valid 3-digit HEX codes' do
+      expect(subject.from_hex('#0F0').to_milight).to eq green_code
+    end
+
+    it 'takes valid HEX codes without a leading hash' do
+      expect(subject.from_hex('0F0').to_milight).to eq green_code
+      expect(subject.from_hex('00ff00').to_milight).to eq green_code
+    end
+  end
+
   describe '#from_rgb and #to_hsl' do
     it 'converts the RGB colour to HSL' do
       expect(subject.from_rgb(255,   0,   0).to_hsl).to eq [0, 1.0, 0.5]

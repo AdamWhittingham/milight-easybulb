@@ -31,14 +31,22 @@ module Milight
       self
     end
 
-    def colour(colour)
-      colour_value = @colour.of(colour)
-      @commander.send_command COLOUR, colour_value
+    def hue(hue)
+      hue_value = @colour.milight_code_for(hue)
+      @commander.send_command COLOUR, hue_value
       self
     end
 
     def brightness(value)
       brightness_value = @brightness.percent(value)
+      @commander.send_command BRIGHTNESS, brightness_value
+      self
+    end
+
+    def colour(color)
+      colour_value = @colour.milight_code_for(color)
+      brightness_value = @brightness.for_colour(color)
+      @commander.send_command COLOUR, colour_value
       @commander.send_command BRIGHTNESS, brightness_value
       self
     end

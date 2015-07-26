@@ -4,7 +4,7 @@ require_relative 'colour/hsl'
 module Milight
   class Colour
 
-    def of(value)
+    def milight_code_for(value)
       case value
       when String
         colour_hex(value)
@@ -35,16 +35,7 @@ module Milight
 
     def colour_hex(hex)
       raise invalid_hex_colour_error unless valid_hex_colour? hex
-      r, g, b = hex_to_rgb hex
-      rgb(r, g, b)
-    end
-
-    def hex_to_rgb(hex)
-      hex.sub('#', '')
-        .chars
-        .each_slice(hex.length / 3)
-        .map(&:join)
-        .map { |h| h.to_i(16) }
+      Milight::Colour::HSL.new.from_hex(hex).to_milight
     end
 
     def invalid_colour_error
