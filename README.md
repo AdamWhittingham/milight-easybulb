@@ -8,7 +8,7 @@ Usage
 2. Initialise a new controller with the IP address of your controller
 3. Send commands to all groups, or just one
 
-For example, connecting to a controller on `192.168.0.10`, turning on group 1 and setting it to a light blue colour:
+For example, connecting to a controller on `192.168.0.10`, turning on group 1 and setting it to a teal colour at 50% brightness:
 
 ```Ruby
 require 'milight'
@@ -19,9 +19,13 @@ lights = Milight::Controller.new '192.168.0.10'
 # Turn a group of lights on and set their colour
 lights.group(1).on
 lights.group(1).colour :teal
+lights.group(1).brightness(50)
 
-# Chain commands to one group
-lights.group(2).on.white.brightness(30)
+# Or chain the commands to one group
+lights.group(1).on.colour(:teal).brightness(50)
+
+# Or give the colour as a hex code and let the library work out the hue and brightness
+lights.group(1).on.colour('#008888')
 
 # Go to bed after happily messing with lights!
 lights.all.off
@@ -32,8 +36,8 @@ Take a look at [the example script](bin/example) for an example script using the
 Things you should know
 ----------------------
 * Brightness is given as a percentage (0-100)
-* Colours can be set using the `of` method:
+* Colours can be set using the `colour` method:
   * a [named colour](lib/milight/colour/named.rb))
   * a HEX colour code (for example, `#f00` or `#a0f060`
   * a MiLight hue colour command- an integer between 0-255.
-* Everything is sent over UDP, as per the Milight spec. This means that some commands will get 'lost', especially if you send many in quick succession.
+* Everything is sent over UDP, as per the Milight spec. This means that some commands will get 'lost', especially if you send many in quick succession. The gem tries to account for this by adding short delays between commands but it isn't guaranteed.
