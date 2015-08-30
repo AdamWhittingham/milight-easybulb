@@ -1,69 +1,42 @@
-require_relative 'colour/named'
 require_relative 'colour/hsl'
+require_relative 'brightness'
 
 module Milight
   class Colour
+    HUE_OFFSET = 170
 
-    def milight_code_for(value)
-      case value
-      when String
-        colour_hex(value)
-      when Symbol
-        colour_named(value)
-      when Fixnum
-        colour_numbered(value)
-      else
-        raise invalid_colour_error
-      end
+    def initialize(value)
+      @colour = case value
+                when String
+                  Milight::Colour::HSL.new.from_hex(value)
+                when Array
+                  Milight::Colour::HSL.new.from_rgb(*value)
+                else
+                  raise invalid_colour_error
+                end
+      self
     end
 
-    def rgb(r, g, b)
-      Milight::Colour::HSL.new.from_rgb(r, g, b).to_milight
+    def to_milight_colour
+      hue = @colour.hue
+      mod = (hue / 120) * 50
+      (hue + HUE_OFFSET + mod).round % 255
+    end
+
+    def to_milight_brightness
+      percent = [brightness_for_saturation, 100].min
+      Milight::Brightness.new(percent).to_milight_brightness
     end
 
     private
 
-    def colour_named(name)
-      raise invalid_colour_name_error(name) unless valid_name? name
-      NAMED[name]
-    end
-
-    def colour_numbered(number)
-      raise invalid_colour_number_error unless valid_colour? number
-      number
-    end
-
-    def colour_hex(hex)
-      raise invalid_hex_colour_error unless valid_hex_colour? hex
-      Milight::Colour::HSL.new.from_hex(hex).to_milight
+    def brightness_for_saturation
+      r,g,b = *@colour.to_rgb
+      (Math.sqrt(r*r + g*g + b*b) / 2.55 ).round
     end
 
     def invalid_colour_error
-      ArgumentError.new('Colours must be a name symbol, HEX string, or a MiLight colour integer between 0 and 255')
-    end
-
-    def valid_colour?(value)
-      value.between?(0, 255)
-    end
-
-    def invalid_colour_number_error
-      ArgumentError.new('Colours numbers must be between 0 and 255')
-    end
-
-    def valid_name?(name)
-      NAMED.keys.include?(name)
-    end
-
-    def invalid_colour_name_error(name)
-      ArgumentError.new("#{name} is not a known colour")
-    end
-
-    def valid_hex_colour?(value)
-      value =~ /^#?([0-9a-f]{3}){,2}$/i
-    end
-
-    def invalid_hex_colour_error
-      ArgumentError.new('Hex colours codes must be 3 or 6 0-9 or a-f characters')
+      ArgumentError.new('Colours must be given as with a hex colour string or a RGB array: #{described_class}.new([r,g,b])')
     end
 
   end

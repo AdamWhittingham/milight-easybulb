@@ -1,5 +1,4 @@
 require 'milight/colour'
-require 'milight/brightness'
 
 module Milight
   class RgbwAll
@@ -10,10 +9,9 @@ module Milight
     COLOUR = 0x40
     BRIGHTNESS = 0x4E
 
-    def initialize(commander, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new)
+    def initialize(commander, colour_helper: Milight::Colour)
       @commander = commander
       @colour = colour_helper
-      @brightness = brightness_helper
     end
 
     def on
@@ -32,22 +30,21 @@ module Milight
     end
 
     def hue(hue)
-      hue_value = @colour.milight_code_for(hue)
+      hue_value = @colour.new(hue).to_milight_colour
       @commander.send_command COLOUR, hue_value
       self
     end
 
-    def brightness(value)
-      brightness_value = @brightness.percent(value)
+    def brightness(percent)
+      brightness_value = Milight::Brightness.new(percent).to_milight_brightness
       @commander.send_command BRIGHTNESS, brightness_value
       self
     end
 
-    def colour(color)
-      colour_value = @colour.milight_code_for(color)
-      brightness_value = @brightness.for_colour(color)
-      @commander.send_command COLOUR, colour_value
-      @commander.send_command BRIGHTNESS, brightness_value
+    def colour(colour)
+      colour_helper = @colour.new(colour)
+      @commander.send_command COLOUR, colour_helper.to_milight_colour
+      @commander.send_command BRIGHTNESS, colour_helper.to_milight_brightness
       self
     end
 

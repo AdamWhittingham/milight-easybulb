@@ -42,12 +42,12 @@ describe Milight::RgbwAll do
 
   describe '#hue' do
     it 'sends a COLOUR packet' do
-      expect(commander).to receive(:send_command).with(0x40, 10)
-      subject.hue 10
+      expect(commander).to receive(:send_command).with(0x40, 170)
+      subject.hue '#f00'
     end
 
     it 'is chainable' do
-      expect(subject.hue(10)).to eq subject
+      expect(subject.hue('#f00')).to eq subject
     end
   end
 

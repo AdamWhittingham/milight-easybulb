@@ -1,5 +1,4 @@
 require 'milight/colour'
-require 'milight/brightness'
 
 module Milight
   class RgbwGroup
@@ -11,12 +10,11 @@ module Milight
     BRIGHTNESS = 0x4E
     COLOUR = 0x40
 
-    def initialize(commander, group, colour_helper: Milight::Colour.new, brightness_helper: Milight::Brightness.new)
+    def initialize(commander, group, colour_helper: Milight::Colour)
       raise invalid_group_error unless valid_group? group
       @index = group - 1
       @commander = commander
-      @colour = colour_helper
-      @brightness = brightness_helper
+      @colour_helper = colour_helper
     end
 
     def on
@@ -35,25 +33,24 @@ module Milight
     end
 
     def hue(hue)
-      colour_value = @colour.milight_code_for(hue)
+      colour_value = @colour_helper.new(hue).to_milight_colour
       select
       @commander.send_command COLOUR, colour_value
       self
     end
 
     def brightness(value)
-      brightness_value = @brightness.percent(value)
+      brightness_value = Milight::Brightness.new(value).to_milight_brightness
       select
       @commander.send_command BRIGHTNESS, brightness_value
       self
     end
 
     def colour(color)
-      colour_value = @colour.milight_code_for(color)
-      brightness_value = @brightness.for_colour(color)
+      colour_value = @colour_helper.new(color)
       select
-      @commander.send_command COLOUR, colour_value
-      @commander.send_command BRIGHTNESS, brightness_value
+      @commander.send_command COLOUR, colour_value.to_milight_colour
+      @commander.send_command BRIGHTNESS, colour_value.to_milight_brightness
       self
     end
 

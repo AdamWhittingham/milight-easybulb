@@ -6,50 +6,21 @@ describe Milight::Colour do
   let(:green_code) { 85 }
   let(:blue_code)  { 0 }
 
-  describe '#milight_code_for' do
-    it 'returns a valid colour number' do
-      expect(subject.milight_code_for 255).to eq 255
+  describe '#to_milight_colour' do
+    it 'converts hex codes to milight colour codes' do
+      expect(described_class.new('#FF0000').to_milight_colour ).to eq red_code
     end
 
-    it 'raises an exception for invalid numbers' do
-      expect { subject.milight_code_for 256 }.to raise_error ArgumentError
-    end
-
-    it 'takes a symbol for named colours' do
-      expect(subject.milight_code_for :dark_blue).to eq blue_code
-    end
-
-    it 'raises an exception for invalid names' do
-      expect { subject.milight_code_for :grellow }.to raise_error ArgumentError
-    end
-
-    it 'balks at arguments which are not a valid number or name' do
-      expect { subject.milight_code_for 0.2 }.to raise_error ArgumentError
-    end
-
-    it 'takes valid 6-digit HEX codes' do
-      expect(subject.milight_code_for '#FF0000').to eq red_code
-    end
-
-    it 'takes valid HEX codes without a leading hash' do
-      expect(subject.milight_code_for '0F0').to eq green_code
-      expect(subject.milight_code_for '00ff00').to eq green_code
-    end
-
-    it 'takes valid 3-digit HEX codes' do
-      expect(subject.milight_code_for '#0F0').to eq green_code
-    end
-
-    it 'raises an exception for invalid HEX codes' do
-      expect { subject.milight_code_for '#00112233' }.to raise_error ArgumentError
+    it 'converts an array of RGB values to milight colour codes' do
+      expect(described_class.new( [255, 0 ,0 ]).to_milight_colour ).to eq red_code
     end
   end
 
-  describe '#rgb' do
-    it 'returns the milight colour code for the given RGB values' do
-      expect(subject.rgb 255,   0,   0).to eq red_code
-      expect(subject.rgb 0,   255,   0).to eq green_code
-      expect(subject.rgb 0,     0, 255).to eq blue_code
+  describe '#to_milight_brightness' do
+    it 'converts hex codes to milight brightness codes' do
+      expect(described_class.new('#00FF00').to_milight_brightness ).to eq 27
+      expect(described_class.new('#008800').to_milight_brightness ).to eq 15
     end
   end
+
 end
