@@ -46,15 +46,23 @@ module Milight
       self
     end
 
-    def colour(color)
-      colour_value = @colour_helper.new(color)
+    def colour(colour)
+      colour_value = @colour_helper.new(colour)
       select
-      @commander.send_command COLOUR, colour_value.to_milight_colour
-      @commander.send_command BRIGHTNESS, colour_value.to_milight_brightness
+      colour_value.greyscale? ? white : set_hue_from_colour(colour_value)
+      set_brightness_from_colour(colour_value)
       self
     end
 
     private
+
+    def set_hue_from_colour colour
+      @commander.send_command COLOUR, colour.to_milight_colour
+    end
+
+    def set_brightness_from_colour colour
+      @commander.send_command BRIGHTNESS, colour.to_milight_brightness
+    end
 
     def select
       on

@@ -28,6 +28,10 @@ module Milight
       Milight::Brightness.new(percent).to_milight_brightness
     end
 
+    def greyscale?
+      @colour.greyscale?(@colour.red, @colour.green, @colour.blue)
+    end
+
     private
 
     def brightness_for_saturation

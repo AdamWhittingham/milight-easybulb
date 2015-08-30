@@ -66,27 +66,30 @@ describe Milight::RgbwGroup do
     before do
       allow(commander).to receive(:send_command).with(0x40, anything)
       allow(commander).to receive(:send_command).with(0x4E, anything)
+      allow(commander).to receive(:send_command).with(0x45)
     end
 
     it 'sets the hue' do
       expect(commander).to receive(:send_command).with(0x40, 85)
-      subject.hue '#880088'
+      subject.colour '#880088'
     end
 
     it 'sets the brightness' do
       expect(commander).to receive(:send_command).with(0x40, 85)
-      subject.hue '#880088'
+      subject.colour '#880088'
+    end
+
+    context 'for a greyscale colour' do
+      it 'sets the light to white' do
+        expect(commander).to receive(:send_command).with(0xC5)
+        subject.colour '#aaa'
+      end
+
+      it 'sets the brightness' do
+        expect(commander).to receive(:send_command).with(0x4E, 25)
+        subject.colour '#888'
+      end
     end
   end
 
-  describe '.new' do
-    it 'can have the colour helper overridden' do
-      helper = double(Milight::Colour)
-      group = described_class.new commander, 1, colour_helper: helper
-      expect(helper).to receive_message_chain(:new, :to_milight_colour).and_return(10)
-      expect(helper).to receive_message_chain(:new, :to_milight_brightness).and_return(10)
-      group.colour '#f00'
-    end
-
-  end
 end

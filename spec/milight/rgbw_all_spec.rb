@@ -77,6 +77,18 @@ describe Milight::RgbwAll do
       expect(commander).to receive(:send_command).with(0x4E, 20)
       subject.colour '#880088'
     end
+
+    context 'for a greyscale colour' do
+      it 'sets the light to white' do
+        expect(commander).to receive(:send_command).with(0xC2)
+        subject.colour '#aaa'
+      end
+
+      it 'sets the brightness' do
+        expect(commander).to receive(:send_command).with(0x4E, 25)
+        subject.colour '#888'
+      end
+    end
   end
 
 end

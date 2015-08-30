@@ -11,7 +11,7 @@ module Milight
 
     def initialize(commander, colour_helper: Milight::Colour)
       @commander = commander
-      @colour = colour_helper
+      @colour_helper = colour_helper
     end
 
     def on
@@ -30,7 +30,7 @@ module Milight
     end
 
     def hue(hue)
-      hue_value = @colour.new(hue).to_milight_colour
+      hue_value = @colour_helper.new(hue).to_milight_colour
       @commander.send_command COLOUR, hue_value
       self
     end
@@ -42,10 +42,20 @@ module Milight
     end
 
     def colour(colour)
-      colour_helper = @colour.new(colour)
-      @commander.send_command COLOUR, colour_helper.to_milight_colour
-      @commander.send_command BRIGHTNESS, colour_helper.to_milight_brightness
+      colour_value = @colour_helper.new(colour)
+      colour_value.greyscale? ? white : set_hue_from_colour(colour_value)
+      set_brightness_from_colour(colour_value)
       self
+    end
+
+    private
+
+    def set_hue_from_colour colour
+      @commander.send_command COLOUR, colour.to_milight_colour
+    end
+
+    def set_brightness_from_colour colour
+      @commander.send_command BRIGHTNESS, colour.to_milight_brightness
     end
 
   end
