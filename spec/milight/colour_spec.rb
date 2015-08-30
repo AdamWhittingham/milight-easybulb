@@ -21,6 +21,7 @@ describe Milight::Colour do
     it 'converts hex codes to milight brightness codes' do
       expect(described_class.new('#00FF00').to_milight_brightness ).to eq 27
       expect(described_class.new('#008800').to_milight_brightness ).to eq 15
+      expect(described_class.new('#000000').to_milight_brightness ).to eq  2
     end
   end
 
