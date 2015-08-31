@@ -36,18 +36,27 @@ lights.group(3).colour(yellow)
 lights.group(4).colour(blue)
 sleep 1
 
-lights.group(1).colour(blue)
-lights.group(2).colour(red)
-lights.group(3).colour(green)
-lights.group(4).colour(yellow)
-sleep 1
+# Assign the group to a variable for easier identification
+bedroom = lights.group(1)
+kitchen = lights.group(2)
 
-lights.group(1).colour(yellow)
-lights.group(2).colour(blue)
-lights.group(3).colour(red)
-lights.group(4).colour(green)
+bedroom.colour('#2F22ff')
+kitchen.colour('#FFF')
+
+# Set either the hue or brightness without affecting the other
+lights.group(3).hue(yellow)
+lights.group(4).brightness(25) # given as a percentage
+sleep 1
+lights.all.off
+sleep 3
+
+# Lets simulate the sunrise!
+all = lights.all
+%w[ #003 #006 #00A #22D #F50 #F92 #FC0 #FF4 #FFF].each do |colour|
+  all.colour(colour)
+  sleep 2
+end
 sleep 1
 
 # ...and set everything back to white when we're done!
-sleep 1
 lights.all.white
