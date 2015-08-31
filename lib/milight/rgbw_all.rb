@@ -25,37 +25,43 @@ module Milight
     end
 
     def white
-      @commander.send_command WHITE
+      send_white_cmd
       self
     end
 
     def hue(hue)
-      hue_value = @colour_helper.new(hue).to_milight_colour
-      @commander.send_command COLOUR, hue_value
+      colour = @colour_helper.new(hue)
+      send_colour_cmd colour
       self
     end
 
-    def brightness(percent)
-      brightness_value = Milight::Brightness.new(percent).to_milight_brightness
-      @commander.send_command BRIGHTNESS, brightness_value
+    def brightness(value)
+      brightness = Milight::Brightness.new(value)
+      send_brightness_cmd brightness
       self
     end
 
     def colour(colour)
       colour_value = @colour_helper.new(colour)
-      colour_value.greyscale? ? white : set_hue_from_colour(colour_value)
-      set_brightness_from_colour(colour_value)
+      colour_value.greyscale? ? send_white_cmd : send_colour_cmd(colour_value)
+      send_brightness_cmd colour_value
       self
     end
 
     private
 
-    def set_hue_from_colour colour
-      @commander.send_command COLOUR, colour.to_milight_colour
+    def send_white_cmd
+      @commander.send_command WHITE
     end
 
-    def set_brightness_from_colour colour
-      @commander.send_command BRIGHTNESS, colour.to_milight_brightness
+    def send_colour_cmd colour
+      @commander.send_command COLOUR, colour.to_milight_colour
+      self
+    end
+
+    def send_brightness_cmd brightness
+      @commander.send_command BRIGHTNESS, brightness.to_milight_brightness
+      self
     end
 
   end
