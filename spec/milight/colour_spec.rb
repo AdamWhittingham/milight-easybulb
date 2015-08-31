@@ -1,55 +1,81 @@
 require 'spec_helper'
+require 'ostruct'
 require production_code
 
 describe Milight::Colour do
-  let(:red_code)   { 170 }
-  let(:green_code) { 85 }
-  let(:blue_code)  { 0 }
 
-  describe '#of' do
-    it 'returns a valid colour number' do
-      expect(subject.of 255).to eq 255
+  let(:red)   { OpenStruct.new(milight: 170, rgb: [255,   0,   0], hsl:[  0.0, 1.0, 0.5]) }
+  let(:green) { OpenStruct.new(milight:  85, rgb: [  0, 255,   0], hsl:[120.0, 1.0, 0.5]) }
+  let(:blue)  { OpenStruct.new(milight:   0, rgb: [  0,   0, 255], hsl:[240.0, 1.0, 0.5]) }
+
+  describe '#new' do
+    it 'takes valid 6-digit hex codes' do
+      expect(described_class.new('#FF0000').to_hsl).to eq red.hsl
     end
 
-    it 'raises an exception for invalid numbers' do
-      expect { subject.of 256 }.to raise_error ArgumentError
+    it 'takes valid 3-digit hex hsls' do
+      expect(described_class.new('#0F0').to_hsl).to eq green.hsl
     end
 
-    it 'takes a symbol for named colours' do
-      expect(subject.of :dark_blue).to eq blue_code
+    it 'takes valid hex hsls without a leading hash' do
+      expect(described_class.new('0F0'   ).to_hsl).to eq green.hsl
+      expect(described_class.new('00ff00').to_hsl).to eq green.hsl
     end
 
-    it 'raises an exception for invalid names' do
-      expect { subject.of :grellow }.to raise_error ArgumentError
+    it 'raises an arguement error for invalid hex codes' do
+      expect { described_class.new('#00112233') }.to raise_error ArgumentError
     end
 
-    it 'balks at arguments which are not a valid number or name' do
-      expect { subject.of 0.2 }.to raise_error ArgumentError
-    end
-
-    it 'takes valid 6-digit HEX codes' do
-      expect(subject.of '#FF0000').to eq red_code
-    end
-
-    it 'takes valid HEX codes without a leading hash' do
-      expect(subject.of '0F0').to eq green_code
-      expect(subject.of '00ff00').to eq green_code
-    end
-
-    it 'takes valid 3-digit HEX codes' do
-      expect(subject.of '#0F0').to eq green_code
-    end
-
-    it 'raises an exception for invalid HEX codes' do
-      expect { subject.of '#00112233' }.to raise_error ArgumentError
+    it 'takes an RGB array' do
+      expect(described_class.new([255,   0,   0]).to_hsl).to eq red.hsl
+      expect(described_class.new([0,   255,   0]).to_hsl).to eq green.hsl
+      expect(described_class.new([0,     0, 255]).to_hsl).to eq blue.hsl
     end
   end
 
-  describe '#rgb' do
-    it 'returns the milight colour code for the given RGB values' do
-      expect(subject.rgb 255,   0,   0).to eq red_code
-      expect(subject.rgb 0,   255,   0).to eq green_code
-      expect(subject.rgb 0,     0, 255).to eq blue_code
+  describe '#to_milight_colour' do
+    it 'converts hex codes to milight colour codes' do
+      expect(described_class.new('#FF0000').to_milight_colour ).to eq red.milight
+    end
+
+    it 'converts an array of RGB values to milight colour codes' do
+      expect(described_class.new( [255, 0 ,0 ]).to_milight_colour ).to eq red.milight
+    end
+
+  end
+
+  describe '#to_milight_brightness' do
+    it 'converts hex codes to milight brightness codes' do
+      expect(described_class.new('#00FF00').to_milight_brightness ).to eq 27
+      expect(described_class.new('#008800').to_milight_brightness ).to eq 15
+      expect(described_class.new('#000000').to_milight_brightness ).to eq  2
     end
   end
+
+  describe '#to_rgb' do
+    it 'outputs an array of RGB' do
+      expect(described_class.new('#FF0000').to_rgb ).to eq red.rgb
+      expect(described_class.new('#00FF00').to_rgb ).to eq green.rgb
+      expect(described_class.new('#0000FF').to_rgb ).to eq blue.rgb
+    end
+  end
+
+  describe '#to_hsl' do
+    it 'outputs an array of HSL' do
+      expect(described_class.new('#FF0000').to_hsl ).to eq red.hsl
+      expect(described_class.new('#00FF00').to_hsl ).to eq green.hsl
+      expect(described_class.new('#0000FF').to_hsl ).to eq blue.hsl
+    end
+  end
+
+  describe '#greyscale?' do
+    it 'returns true for greyscale colours' do
+      expect(described_class.new('#aaa').greyscale?).to eq true
+    end
+
+    it 'returns false for non-greyscale colours' do
+      expect(described_class.new('#f0f').greyscale?).to eq false
+    end
+  end
+
 end

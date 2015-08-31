@@ -1,74 +1,108 @@
-require_relative 'colour/named'
-require_relative 'colour/hsl'
+require_relative 'brightness'
 
 module Milight
   class Colour
+    attr_reader :hue, :saturation, :luminosity, :red, :green, :blue
 
-    def of(value)
+    HUE_OFFSET = 170
+    VALID_HEX_REGEX = /^#?([0-9a-f]{3}){,2}$/i
+
+    def initialize(value)
       case value
-      when String
-        colour_hex(value)
-      when Symbol
-        colour_named(value)
-      when Fixnum
-        colour_numbered(value)
+      when String then from_hex(value)
+      when Array  then from_rgb(*value)
       else
         raise invalid_colour_error
       end
     end
 
-    def rgb(r, g, b)
-      Milight::Colour::HSL.new.from_rgb(r, g, b).to_milight
+    def to_hsl
+      [@hue, @saturation, @luminosity]
+    end
+
+    def to_rgb
+      [@red, @green, @blue]
+    end
+
+    def to_milight_colour
+      mod = (@hue / 120) * 50
+      (@hue + HUE_OFFSET + mod).round % 255
+    end
+
+    def to_milight_brightness
+      percent = [brightness_for_saturation, 100].min
+      Milight::Brightness.new(percent).to_milight_brightness
+    end
+
+    def greyscale?
+      @red == @green && @red == @blue
     end
 
     private
 
-    def colour_named(name)
-      raise invalid_colour_name_error(name) unless valid_name? name
-      NAMED[name]
+    def from_rgb(r, g, b)
+      @red, @green, @blue = r, g, b
+      @hue, @saturation, @luminosity = rgb_to_hsl(r, g, b)
     end
 
-    def colour_numbered(number)
-      raise invalid_colour_number_error unless valid_colour? number
-      number
-    end
-
-    def colour_hex(hex)
+    def from_hex(hex)
       raise invalid_hex_colour_error unless valid_hex_colour? hex
-      r, g, b = hex_to_rgb hex
-      rgb(r, g, b)
+      r,g,b = hex_to_rgb(hex)
+      from_rgb(r,g,b)
+    end
+
+    def brightness_for_saturation
+      r,g,b = *to_rgb
+      (Math.sqrt(r*r + g*g + b*b) / 2.55 ).round
     end
 
     def hex_to_rgb(hex)
       hex.sub('#', '')
         .chars
         .each_slice(hex.length / 3)
+        .map{|val| val.length == 1 ? val * 2 : val }
         .map(&:join)
         .map { |h| h.to_i(16) }
     end
 
-    def invalid_colour_error
-      ArgumentError.new('Colours must be a name symbol, HEX string, or a MiLight colour integer between 0 and 255')
+    def rgb_to_hsl(r, g, b)
+      r,g,b = [r,g,b].map!{|c| c /= 255.0 }
+      h = rgb_to_hue(r, g, b)
+      l = rgb_to_luminosity(r, g, b)
+      s = rgbl_to_saturation(r, g, b, l)
+      [h, s, l]
     end
 
-    def valid_colour?(value)
-      value.between?(0, 255)
+    def rgb_to_hue(r, g, b)
+      return 0 if greyscale?
+      delta = delta(r, g, b)
+      offset = case [r, g, b].max
+               when r then ((g - b) / delta)
+               when g then ((b - r) / delta) + 2
+               when b then ((r - g) / delta) + 4
+               end
+      60 * offset % 360
     end
 
-    def invalid_colour_number_error
-      ArgumentError.new('Colours numbers must be between 0 and 255')
+    def rgb_to_luminosity(r, g, b)
+      [r, g, b].minmax.inject(:+) / 2
     end
 
-    def valid_name?(name)
-      NAMED.keys.include?(name)
+    def rgbl_to_saturation(r, g, b, l)
+      return 0 if greyscale?
+      delta(r, g, b) / 1 - (2 * l - 1).abs
     end
 
-    def invalid_colour_name_error(name)
-      ArgumentError.new("#{name} is not a known colour")
+    def delta(r, g, b)
+      [r, g, b].minmax.reverse.inject(:-)
     end
 
     def valid_hex_colour?(value)
-      value =~ /^#?([0-9a-f]{3}){,2}$/i
+      value =~ VALID_HEX_REGEX
+    end
+
+    def invalid_colour_error
+      ArgumentError.new("Colours must be given as with a hex colour string ( #{described_class}.new('#foo') ) or a RGB array ( #{described_class}.new([r,g,b]) )")
     end
 
     def invalid_hex_colour_error

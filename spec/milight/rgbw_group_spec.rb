@@ -40,20 +40,20 @@ describe Milight::RgbwGroup do
     end
   end
 
-  describe '#colour' do
-    it 'sends the COLOUR packet for the given group' do
-      expect(commander).to receive(:send_command).with(0x40, 10)
-      subject.colour 10
+  describe '#hue' do
+    it 'sends a COLOUR packet for the given group' do
+      expect(commander).to receive(:send_command).with(0x40, 170)
+      subject.hue '#f00'
     end
 
     it 'is chainable' do
-      expect(subject.colour(10)).to eq subject
+      expect(subject.hue('#f00')).to eq subject
     end
   end
 
   describe '#brightness' do
     it 'sends the BRIGHTNESS packet for the given group' do
-      expect(commander).to receive(:send_command).with(0x4E, 3)
+      expect(commander).to receive(:send_command).with(0x4E, 4)
       subject.brightness 10
     end
 
@@ -62,19 +62,34 @@ describe Milight::RgbwGroup do
     end
   end
 
-  describe '.new' do
-    it 'can have the colour helper overridden' do
-      helper = double(Milight::Colour)
-      group = described_class.new commander, 1, colour_helper: helper
-      expect(helper).to receive(:of).with(10).and_return(10)
-      group.colour 10
+  describe '#colour' do
+    before do
+      allow(commander).to receive(:send_command).with(0x40, anything)
+      allow(commander).to receive(:send_command).with(0x4E, anything)
+      allow(commander).to receive(:send_command).with(0x45)
     end
 
-    it 'can have the brightness helper overridden' do
-      helper = double(Milight::Brightness)
-      group = described_class.new commander, 1, brightness_helper: helper
-      expect(helper).to receive(:percent).with(10).and_return(10)
-      group.brightness 10
+    it 'sets the hue' do
+      expect(commander).to receive(:send_command).with(0x40, 85)
+      subject.colour '#880088'
+    end
+
+    it 'sets the brightness' do
+      expect(commander).to receive(:send_command).with(0x40, 85)
+      subject.colour '#880088'
+    end
+
+    context 'for a greyscale colour' do
+      it 'sets the light to white' do
+        expect(commander).to receive(:send_command).with(0xC5)
+        subject.colour '#aaa'
+      end
+
+      it 'sets the brightness' do
+        expect(commander).to receive(:send_command).with(0x4E, 25)
+        subject.colour '#888'
+      end
     end
   end
+
 end
