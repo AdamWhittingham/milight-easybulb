@@ -51,17 +51,23 @@ module Milight
     private
 
     def send_white_cmd
+      select
       @commander.send_command WHITE
     end
 
     def send_colour_cmd colour
+      select
       @commander.send_command COLOUR, colour.to_milight_colour
-      self
     end
 
     def send_brightness_cmd brightness
+      select
       @commander.send_command BRIGHTNESS, brightness.to_milight_brightness
-      self
+    end
+
+    def select
+      on
+      @commander.command_delay
     end
 
   end
