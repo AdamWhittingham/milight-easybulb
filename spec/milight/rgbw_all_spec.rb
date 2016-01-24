@@ -42,7 +42,7 @@ describe Milight::RgbwAll do
 
   describe '#hue' do
     it 'sends a COLOUR packet' do
-      expect(commander).to receive(:send_command).with(0x40, 170)
+      expect(commander).to receive(:send_command).with(0x40, 176)
       subject.hue '#f00'
     end
 
@@ -69,7 +69,7 @@ describe Milight::RgbwAll do
     end
 
     it 'sets the hue' do
-      expect(commander).to receive(:send_command).with(0x40, 85)
+      expect(commander).to receive(:send_command).with(0x40, 219)
       subject.colour '#880088'
     end
 

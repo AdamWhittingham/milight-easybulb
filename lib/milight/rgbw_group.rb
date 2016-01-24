@@ -2,6 +2,7 @@ require 'milight/colour'
 
 module Milight
   class RgbwGroup
+    attr_reader :commander
 
     GROUP_ON = [0x45, 0x47, 0x49, 0x4B]
     GROUP_OFF = [0x46, 0x48, 0x4A, 0x4C]
@@ -69,7 +70,6 @@ module Milight
 
     def select
       on
-      @commander.command_delay
     end
 
     def invalid_group_error

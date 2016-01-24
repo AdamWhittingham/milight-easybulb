@@ -4,13 +4,15 @@ require production_code
 
 describe Milight::Colour do
 
-  let(:red)   { OpenStruct.new(milight: 170, rgb: [255,   0,   0], hsl:[  0.0, 1.0, 0.5]) }
+  let(:red)   { OpenStruct.new(milight: 176, rgb: [255,   0,   0], hsl:[  0.0, 1.0, 0.5]) }
   let(:green) { OpenStruct.new(milight:  85, rgb: [  0, 255,   0], hsl:[120.0, 1.0, 0.5]) }
   let(:blue)  { OpenStruct.new(milight:   0, rgb: [  0,   0, 255], hsl:[240.0, 1.0, 0.5]) }
 
   describe '#new' do
     it 'takes valid 6-digit hex codes' do
       expect(described_class.new('#FF0000').to_hsl).to eq red.hsl
+      expect(described_class.new('#00FF00').to_hsl).to eq green.hsl
+      expect(described_class.new('#0000FF').to_hsl).to eq blue.hsl
     end
 
     it 'takes valid 3-digit hex hsls' do

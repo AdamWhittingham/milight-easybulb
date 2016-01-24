@@ -67,7 +67,6 @@ module Milight
 
     def select
       on
-      @commander.command_delay
     end
 
   end

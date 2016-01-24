@@ -4,7 +4,7 @@ module Milight
   class Colour
     attr_reader :hue, :saturation, :luminosity, :red, :green, :blue
 
-    HUE_OFFSET = 170
+    HUE_OFFSET = 176
     VALID_HEX_REGEX = /^#?([0-9a-f]{3}){,2}$/i
 
     def initialize(value)
@@ -25,8 +25,7 @@ module Milight
     end
 
     def to_milight_colour
-      mod = (@hue / 120) * 50
-      (@hue + HUE_OFFSET + mod).round % 255
+      ((256 + HUE_OFFSET - (hue / 360.0 * 255.0)) % 256).to_i
     end
 
     def to_milight_brightness
@@ -90,7 +89,7 @@ module Milight
 
     def rgbl_to_saturation(r, g, b, l)
       return 0 if greyscale?
-      delta(r, g, b) / 1 - (2 * l - 1).abs
+      (delta(r, g, b) / 1 - (2 * l - 1)).abs
     end
 
     def delta(r, g, b)
