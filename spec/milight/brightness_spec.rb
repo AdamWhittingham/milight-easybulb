@@ -4,7 +4,7 @@ require production_code
 describe Milight::Brightness do
   describe '#to_milight_brightness' do
 
-    { 
+    {
       100 => 27,
        75 => 20,
        50 => 14,
