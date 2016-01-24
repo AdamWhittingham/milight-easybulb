@@ -52,10 +52,22 @@ sleep 3
 
 # Lets simulate the sunrise!
 all = lights.all
-%w[ #003 #006 #00A #22D #F50 #F92 #FC0 #FF4 #FFF].each do |colour|
+SUNRISE = %w[ #003 #026 #02A #23A #F50 #F92 #FC0 #FF4 #FFF]
+
+puts 'Sunrise!'
+SUNRISE.each do |colour|
   all.colour(colour)
+  print ?.
   sleep 2
 end
+
+puts 'Sunset!'
+SUNRISE.reverse.each do |colour|
+  all.colour(colour)
+  print ?.
+  sleep 2
+end
+
 sleep 1
 
 # ...and set everything back to white when we're done!
