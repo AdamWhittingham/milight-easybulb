@@ -60,11 +60,11 @@ module Milight
 
     def hex_to_rgb(hex)
       hex.sub('#', '')
-         .chars
-         .each_slice(hex.length / 3)
-         .map { |val| val.length == 1 ? val * 2 : val }
-         .map(&:join)
-         .map { |h| h.to_i(16) }
+        .chars
+        .each_slice(hex.length / 3)
+        .map { |val| val.length == 1 ? val * 2 : val }
+        .map(&:join)
+        .map { |h| h.to_i(16) }
     end
 
     def rgb_to_hsl(r1, g1, b1)

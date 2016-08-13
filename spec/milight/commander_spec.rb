@@ -29,9 +29,9 @@ describe Milight::Commander do
 
   describe '#command_delay' do
     it 'pauses for 100 milliseconds' do
-      before = Time.now
+      before = Time.now.utc
       subject.command_delay
-      after = Time.now
+      after = Time.now.utc
       expect(after - before).to be > 0.1
     end
   end
