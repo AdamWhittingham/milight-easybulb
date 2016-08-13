@@ -1,6 +1,7 @@
 require 'pry'
 require 'simplecov'
 SimpleCov.coverage_dir 'log/coverage/spec'
+SimpleCov.add_filter '/vendor/'
 SimpleCov.start
 
 def production_code

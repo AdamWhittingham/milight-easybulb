@@ -97,6 +97,3 @@ DEPENDENCIES
   rspec
   rubocop
   simplecov
-
-BUNDLED WITH
-   1.12.3
