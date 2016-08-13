@@ -90,5 +90,4 @@ describe Milight::RgbwAll do
       end
     end
   end
-
 end

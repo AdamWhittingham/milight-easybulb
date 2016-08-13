@@ -1,6 +1,7 @@
 module Milight
   class Brightness
-    MIN =  2
+
+    MIN = 2
     MAX = 27
 
     def initialize percent
@@ -21,5 +22,6 @@ module Milight
     def valid_brightness? percentage
       percentage >= 0 && percentage <= 100
     end
+
   end
 end

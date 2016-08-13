@@ -57,14 +57,14 @@ SUNRISE = %w[ #003 #026 #02A #23A #F50 #F92 #FC0 #FF4 #FFF]
 puts 'Sunrise!'
 SUNRISE.each do |colour|
   all.colour(colour)
-  print ?.
+  print '.'
   sleep 2
 end
 
 puts 'Sunset!'
-SUNRISE.reverse.each do |colour|
+SUNRISE.reverse_each do |colour|
   all.colour(colour)
-  print ?.
+  print '.'
   sleep 2
 end
 

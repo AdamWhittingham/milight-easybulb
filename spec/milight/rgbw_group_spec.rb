@@ -91,5 +91,4 @@ describe Milight::RgbwGroup do
       end
     end
   end
-
 end

@@ -2,6 +2,7 @@ require 'milight/colour'
 
 module Milight
   class RgbwGroup
+
     attr_reader :commander
 
     GROUP_ON = [0x45, 0x47, 0x49, 0x4B]

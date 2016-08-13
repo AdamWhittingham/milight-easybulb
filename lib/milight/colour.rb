@@ -2,6 +2,7 @@ require_relative 'brightness'
 
 module Milight
   class Colour
+
     attr_reader :hue, :saturation, :luminosity, :red, :green, :blue
 
     HUE_OFFSET = 176
@@ -40,32 +41,34 @@ module Milight
     private
 
     def from_rgb(r, g, b)
-      @red, @green, @blue = r, g, b
+      @red = r
+      @green = g
+      @blue = b
       @hue, @saturation, @luminosity = rgb_to_hsl(r, g, b)
     end
 
     def from_hex(hex)
       raise invalid_hex_colour_error unless valid_hex_colour? hex
-      r,g,b = hex_to_rgb(hex)
-      from_rgb(r,g,b)
+      r, g, b = hex_to_rgb(hex)
+      from_rgb(r, g, b)
     end
 
     def brightness_for_saturation
-      r,g,b = *to_rgb
-      (Math.sqrt(r*r + g*g + b*b) / 2.55 ).round
+      r, g, b = *to_rgb
+      (Math.sqrt(r * r + g * g + b * b) / 2.55).round
     end
 
     def hex_to_rgb(hex)
       hex.sub('#', '')
         .chars
         .each_slice(hex.length / 3)
-        .map{|val| val.length == 1 ? val * 2 : val }
+        .map { |val| val.length == 1 ? val * 2 : val }
         .map(&:join)
         .map { |h| h.to_i(16) }
     end
 
-    def rgb_to_hsl(r, g, b)
-      r,g,b = [r,g,b].map!{|c| c /= 255.0 }
+    def rgb_to_hsl(r1, g1, b1)
+      r, g, b = [r1, g1, b1].map { |c| c / 255.0 }
       h = rgb_to_hue(r, g, b)
       l = rgb_to_luminosity(r, g, b)
       s = rgbl_to_saturation(r, g, b, l)
@@ -101,7 +104,10 @@ module Milight
     end
 
     def invalid_colour_error
-      ArgumentError.new("Colours must be given as with a hex colour string ( #{described_class}.new('#foo') ) or a RGB array ( #{described_class}.new([r,g,b]) )")
+      ArgumentError.new(
+        "Colours must be given as with a hex colour string ( #{described_class}.new('#11A401') )" \
+        " or a RGB array ( #{described_class}.new([r,g,b]) )"
+      )
     end
 
     def invalid_hex_colour_error
