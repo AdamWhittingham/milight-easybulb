@@ -27,6 +27,10 @@ describe Milight::Colour do
       expect { described_class.new('#00112233') }.to raise_error ArgumentError
     end
 
+    it 'raises an arguement error for invalid colour codes' do
+      expect { described_class.new(:hello) }.to raise_error ArgumentError
+    end
+
     it 'takes an RGB array' do
       expect(described_class.new([255, 0,   0]).to_hsl).to eq red.hsl
       expect(described_class.new([0, 255,   0]).to_hsl).to eq green.hsl

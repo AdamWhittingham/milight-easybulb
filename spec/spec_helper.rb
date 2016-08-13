@@ -1,4 +1,7 @@
 require 'pry'
+require 'simplecov'
+SimpleCov.coverage_dir 'log/coverage/spec'
+SimpleCov.start
 
 def production_code
   spec = caller[0][/spec.+\.rb/]

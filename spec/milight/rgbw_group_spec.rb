@@ -7,6 +7,12 @@ describe Milight::RgbwGroup do
 
   subject { described_class.new commander, 1 }
 
+  describe '.new' do
+    it 'raises an ArguementError for groups not in the valid range' do
+      expect { described_class.new commander, 5 }.to raise_error ArgumentError
+    end
+  end
+
   describe '#on' do
     it 'sends the ON packet for the given group' do
       expect(commander).to receive(:send_command).with(0x45)

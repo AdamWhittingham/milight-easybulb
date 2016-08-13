@@ -105,8 +105,8 @@ module Milight
 
     def invalid_colour_error
       ArgumentError.new(
-        "Colours must be given as with a hex colour string ( #{described_class}.new('#11A401') )" \
-        " or a RGB array ( #{described_class}.new([r,g,b]) )"
+        "Colours must be given as with a hex colour string ( #{self.class}.new('#11A401') )" \
+        " or a RGB array ( #{self.class}.new([r,g,b]) )"
       )
     end
 
