@@ -1,1 +1,2 @@
-../rubocop.yml
+inherit_from:
+  - https://raw.githubusercontent.com/dvmtn/house_style/master/rubocop.yml
